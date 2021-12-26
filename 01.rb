@@ -10,5 +10,9 @@ floor = 0
 (0...input.size).each do |i|
   floor += 1 if input[i] == '('
   floor -= 1 if input[i] == ')'
+  if floor < 0
+    puts "Santa enters the basement at position #{i + 1}"
+    break
+  end
 end
 puts floor
