@@ -7,7 +7,7 @@ require 'debug'
 filename = $PROGRAM_NAME.gsub(/\.rb$/, '')
 input = File.readlines("./#{filename}.in", chomp: true)
 
-grid = Array.new(1000) { Array.new(1000, false) }
+grid = Array.new(1000) { Array.new(1000, 0) }
 
 def process(input)
   input.map.with_index do |line, i|
@@ -27,30 +27,30 @@ def process(input)
   end
 end
 
-def part_one(instructions, grid)
+def light_show(instructions, grid)
   instructions.each do |instruction|
     case instruction[0]
     when 'N'
       (instruction[1][0]..instruction[2][0]).each do |x|
         (instruction[1][1]..instruction[2][1]).each do |y|
-          grid[x][y] = true
+          grid[x][y] = grid[x][y] + 1
         end
       end
     when 'F'
       (instruction[1][0]..instruction[2][0]).each do |x|
         (instruction[1][1]..instruction[2][1]).each do |y|
-          grid[x][y] = false
+          grid[x][y] = grid[x][y] - 1 if grid[x][y].positive?
         end
       end
     when 'T'
       (instruction[1][0]..instruction[2][0]).each do |x|
         (instruction[1][1]..instruction[2][1]).each do |y|
-          grid[x][y] = !grid[x][y]
+          grid[x][y] = grid[x][y] + 2
         end
       end
     end
   end
-  grid.flatten.count(true)
+  grid.flatten.sum
 end
 
-puts part_one(process(input), grid)
+puts light_show(process(input), grid)
