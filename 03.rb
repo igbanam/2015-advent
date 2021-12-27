@@ -7,23 +7,28 @@ require 'debug'
 filename = $PROGRAM_NAME.gsub(/\.rb$/, '')
 input = File.readlines("./#{filename}.in", chomp: true)[0].chars
 
-@visited = []
-@visited << [0, 0]
-
-def part1(input)
-  input.each do |dir|
-    case dir
-    when '^'
-      @visited << [@visited.last[0], @visited.last[1] + 1]
-    when 'v'
-      @visited << [@visited.last[0], @visited.last[1] - 1]
-    when '>'
-      @visited << [@visited.last[0] + 1, @visited.last[1]]
-    when '<'
-      @visited << [@visited.last[0] - 1, @visited.last[1]]
-    end
+def next_house(previous_house, direction)
+  case direction
+  when '^'
+    [previous_house[0], previous_house[1] + 1]
+  when 'v'
+    [previous_house[0], previous_house[1] - 1]
+  when '<'
+    [previous_house[0] - 1, previous_house[1]]
+  when '>'
+    [previous_house[0] + 1, previous_house[1]]
   end
-  @visited.uniq.count
 end
 
-puts part1(input)
+@santa = [[0, 0]]
+@robo_santa = [[0, 0]]
+
+def delivery(directions)
+  directions.each_with_index do |dir, i|
+    @santa << next_house(@santa.last, dir) if i.even?
+    @robo_santa << next_house(@robo_santa.last, dir) if i.odd?
+  end
+  [@santa + @robo_santa].flatten(1).uniq.count
+end
+
+puts delivery(input)
