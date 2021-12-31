@@ -66,14 +66,22 @@ class Graph
     new(edges)
   end
 
+  def inject_node(node)
+    [node].product(nodes).each do |from, to|
+      edges << Edge.new(from, to, 0)
+      edges << Edge.new(to, from, 0)
+    end
+
+    remap_nodes!
+  end
+
   def remap_nodes!
     @nodes = edges.map(&:from).uniq.push(*edges.map(&:to)).uniq
   end
 end
 
 graph = Graph.from_string(input.join("\n"))
-
-# debugger
+graph.inject_node('me')
 
 happiness = graph.nodes.permutation.map do |perm|
   perm.reduce(0) do |sum, node|
