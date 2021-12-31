@@ -14,6 +14,8 @@ def sum_node(node)
   return 0 if node.empty?
 
   if node.is_a?(Hash)
+    return 0 if node.values.any? { |v| v == 'red' }
+
     node.values.sum { |v| sum_node(v) }
   elsif node.is_a?(Array)
     node.sum { |v| sum_node(v) }
