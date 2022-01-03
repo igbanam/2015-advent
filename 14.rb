@@ -41,3 +41,10 @@ reindeers = input.map do |line|
 end
 
 puts reindeers.map { |r| r.distance_travelled(2503) }.max
+
+part2 = (1..2503).map do |time|
+  distances_travelled = reindeers.map { |reindeer| reindeer.distance_travelled(time) }
+  distances_travelled.map { |distance| distance / distances_travelled.max }
+end.inject(Array.new(reindeers.size) { 0 }) { |acc, normalized_distance| acc.zip(normalized_distance).map { |a, b| a + b } }.max
+
+puts part2
